@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Europe Cities Map</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 600px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <script>
+        // Create a map centered on Europe
+        var map = L.map('map').setView([50, 10], 5);
+
+        // Add the OpenStreetMap tiles as the base layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+        }).addTo(map);
+
+        // Cities data with 'Family', 'Year', 'Occupation'
+        var cities = [
+           	{ name: '1A', city1: 'Amering', state: 'Styria', country: 'Austria', lat: 47.1233, lon: 15.2011, year: 1990, occupation: 'N/A' },
+			{ name: '2N', city1: 'Berlin', state: 'Berlin', country: 'Germany', lat: 52.52, lon: 13.405, year: 1987, occupation: 'Farmer' },
+			{ name: '3P', city1: 'Bestwina', state: '', country: 'Poland', lat: 49.8614, lon: 19.1328, year: 2000, occupation: 'Laborer' },
+			{ name: '4S', city1: 'Blaubeuren', state: 'Baden Wuerttemberg', country: 'Germany', lat: 48.4106, lon: 9.7911, year: 1995, occupation: 'Farmer' },
+			{ name: '5B', city1: 'Buechig', state: 'Baden Wuerttemberg', country: 'Germany', lat: 49.1686, lon: 8.5844, year: 'null', occupation: 'N/A' }
+			];
+
+        // Loop through the cities array and add markers to the map
+        cities.forEach(function(city) {
+            var marker = L.marker([city.lat, city.lon]).addTo(map);
+
+            // Create a popup with city information
+            var popupContent = `
+                <b>${city.name}</b><br>
+				<b>State:</b> ${city.state}<br>
+                <b>Country:</b> ${city.country}<br>
+                <b>Year:</b> ${city.year}<br>
+                <b>Occupation:</b> ${city.occupation}
+            `;
+            marker.bindPopup(popupContent);
+        });
+    </script>
+</body>
+</html>
