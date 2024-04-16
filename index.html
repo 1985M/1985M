@@ -1,23 +1,90 @@
 <!DOCTYPE html>
+/* Last Working Update: 4/16/2024 */
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Europe Cities Map</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
     <style>
-        #map {
-            height: 600px;
-        }
-    </style>
+	#map {
+		height: 600px;
+	}
+
+	/* Style for the title */
+	#map-title {
+		position: absolute;
+		top: 10px; /* Adjust distance from the top */
+		left: 50%;
+		transform: translateX(-50%);
+		font-size: 20px;
+		font-weight: medium;
+		color: #333;
+		background-color: #fff;
+		padding: 5px 10px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		z-index: 1000; /* Ensure it's above the map */
+	}
+	
+	/* Style for subtitle- Change Title words in the style section */
+	#map-subtitle {
+		position: absolute;
+		top: 50px; /* Adjust so it's below the title */
+		left: 50%;
+		transform: translateX(-50%);
+		font-size: 16px;
+		color: #666;
+		background-color: #fff;
+		padding: 3px 10px;
+		border: 1px solid #ccc;
+		border-radius: 3px;
+		z-index: 1000; /* Same layer as title or adjust as needed */
+	}
+		
+	.legend {
+		position: absolute;
+		bottom: 20px;
+		left: 20px;
+		background-color: white;
+		padding: 10px;
+		border-radius: 5px;
+		font-size: 14px;
+		box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+		width: 120px; /* MGS- adjust the legend width here as needed */
+	}
+
+	.legend-item {
+		margin-bottom: 5px;
+	    display: flex;
+        align-items: center;
+	}
+
+	.legend-item span {
+		display: inline-block;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		margin-right: 5px;
+	}
+    
+	.legend-title {    /* MGS- change the legend title in the style section below */
+        font-weight: medium;
+        margin-bottom: 5px;
+    }
+	
+	</style>
+
 </head>
 
 <body>
-    <div id="map"></div>
+   <div id="map">
+	<div id="map-title">A. Map</div> /* MGS- change the title here */
+	<div id="map-subtitle">Map Subtitle</div> /* MGS- change subtitle here */
+   </div>
 
     <script>
         // Create a map centered on Europe
@@ -28,22 +95,70 @@
             maxZoom: 18,
         }).addTo(map);
 
-        // Cities data with 'Family', 'Year', 'Occupation'
+        // Cities data with 'Family Name', 'Year of Immigration', 'Occupation'; MGS: each item needs a value- or ‘null’, ‘N/A’
         var cities = [
-           	{ name: '1A', city1: 'Amering', state: 'Styria', country: 'Austria', lat: 47.1233, lon: 15.2011, year: 1990, occupation: 'N/A' },
-			{ name: '2N', city1: 'Berlin', state: 'Berlin', country: 'Germany', lat: 52.52, lon: 13.405, year: 1987, occupation: 'Farmer' },
-			{ name: '3P', city1: 'Bestwina', state: '', country: 'Poland', lat: 49.8614, lon: 19.1328, year: 2000, occupation: 'Laborer' },
-			{ name: '4S', city1: 'Blaubeuren', state: 'Baden Wuerttemberg', country: 'Germany', lat: 48.4106, lon: 9.7911, year: 1995, occupation: 'Farmer' },
-			{ name: '5B', city1: 'Buechig', state: 'Baden Wuerttemberg', country: 'Germany', lat: 49.1686, lon: 8.5844, year: 'null', occupation: 'N/A' }
-			];
+			{ name: 'Amering', city1: 'Amering', state: 'Styria', country: 'Austria', lat: 47.1233, lon: 15.2011, year: 1820, occupation: 'N/A' },
+			{ name: 'Neumann', city1: 'Berlin', state: 'Berlin', country: 'Germany', lat: 52.52, lon: 13.405, year: 1920, occupation: 'Farmer' },
+			{ name: 'Paul', city1: 'Bestwina', state: 'N/A', country: 'Poland', lat: 49.8614, lon: 19.1328, year: 1880, occupation: 'Laborer' },
+			{ name: 'Schliff', city1: 'Blaubeuren', state: 'Baden Wuerttemberg', country: 'Germany', lat: 48.4106, lon: 9.7911, year: 1890, occupation: 'Farmer' },
+			{ name: 'Braun', city1: 'Buechig', state: 'Baden Wuerttemberg', country: 'Germany', lat: 49.1686, lon: 8.5844, year: 1983, occupation: 'N/A' },
+			{ name: 'Meinhold', city1: 'Chemnitz-Crandorf', state: 'Saxony', country: 'Germany', lat: 50.8307, lon: 12.9273, year: 1900, occupation: 'Baker' },
+			{ name: 'Petersen', city1: 'Duisberg', state: 'North Rhine-Westphalia', country: 'Germany', lat: 51.4344, lon: 6.7623, year: 1910, occupation: 'N/A' },
+			{ name: 'Sparmann', city1: 'Essen', state: 'North Rhine-Westphalia', country: 'Germany', lat: 51.4556, lon: 7.0116, year: 1963, occupation: 'Banker' },
+			{ name: 'Huppenbauer', city1: 'Esslingen', state: 'Baden-Wuerttemberg', country: 'Germany', lat: 48.74, lon: 9.3134, year: 1946, occupation: 'Cook' },
+			{ name: 'Schmidt', city1: 'Freiburg', state: 'Baden-Wuerttemberg', country: 'Germany', lat: 47.999, lon: 7.8421, year: 1856, occupation: 'Sawyer' },
+			{ name: 'Mueller', city1: 'Freiburg', state: 'Baden-Wuerttemberg', country: 'Germany', lat: 47.999, lon: 7.8421, year: 1956, occupation: 'Engineer' },
+			{ name: 'Bress', city1: 'Gelsenkirchen', state: 'North Rhine-Westphalia', country: 'Germany', lat: 51.5177, lon: 7.0857, year: 1940, occupation: 'N/A' },
+			{ name: 'Thiem', city1: 'Gerlingen', state: 'Baden-Wuerttemberg', country: 'Germany', lat: 48.809, lon: 9.0769, year: 0, occupation: 'Banker' },
+			{ name: 'Neinaber', city1: 'Hanover', state: 'Lower Saxony', country: 'Germany', lat: 52.3759, lon: 9.732, year: 1950, occupation: 'Farmer' },
+			{ name: 'Kirchgessner', city1: 'Hanover', state: 'Lower Saxony', country: 'Germany', lat: 52.3759, lon: 9.732, year: 0, occupation: 'Tailor' },
+			{ name: 'Kieffer', city1: 'Hechingen', state: 'Baden-Wuerttemberg', country: 'Germany', lat: 48.3519, lon: 8.9735, year: 1938, occupation: 'Baker' },
+			{ name: 'Timm', city1: 'Kaliningrad', state: 'N/A', country: 'Russia', lat: 54.7104, lon: 20.4522, year: 1955, occupation: 'Coal Miner' },
+			{ name: 'Gerstenberg', city1: 'Kassel', state: 'Hesse', country: 'Germany', lat: 51.3127, lon: 9.4797, year: 1964, occupation: 'Cook' },
+			{ name: 'Busshardt', city1: 'Koblenz', state: 'Rheinland-Pflaz', country: 'Germany', lat: 50.3569, lon: 7.5886, year: 1852, occupation: 'N/A' },
+			{ name: 'Panek', city1: 'Landshut', state: 'Bavaria', country: 'Germany', lat: 48.5442, lon: 12.1461, year: 1957, occupation: 'Contractor' },
+			{ name: 'Domeyer', city1: 'Lerbach', state: 'Lower Saxony', country: 'Germany', lat: 51.7378, lon: 10.2333, year: 1867, occupation: 'Charcoal burner' },
+			{ name: 'Neugebauer', city1: 'Marburg', state: 'Hesse', country: 'Germany', lat: 50.8118, lon: 8.7707, year: 1970, occupation: 'Brick layer' },
+			{ name: 'Schaible', city1: 'Pforzheim', state: 'Baden-Wuerttemberg', country: 'Germany', lat: 48.8921, lon: 8.6947, year: 1927, occupation: 'Tailor' },
+			{ name: 'Keim', city1: 'Rossdorf bei Hanau', state: 'Hesse', country: 'Germany', lat: 50.1421, lon: 8.9456, year: 1900, occupation: 'Butcher' },
+			{ name: 'Grimm', city1: 'Schatthausen', state: 'Baden Wuerttemberg', country: 'Germany', lat: 49.2961, lon: 8.6789, year: 1953, occupation: 'N/A' },
+			{ name: 'Minges', city1: 'Schifferstadt', state: 'Rheinland-Palatinate', country: 'Germany', lat: 49.4063, lon: 8.3788, year: 1832, occupation: 'Sawmill' },
+			{ name: 'Kron', city1: 'Schwartzenberg', state: 'Saxony', country: 'Germany', lat: 50.5493, lon: 12.8706, year: 1953, occupation: 'Engineer' },
+			{ name: 'Hauer', city1: 'Stralsund', state: 'Mecklenburg-Western Pomerania', country: 'Germany', lat: 54.312, lon: 13.0827, year: 1900, occupation: 'Laborer' },
+			{ name: 'Unseldt', city1: 'Vaihingen', state: 'Baden Wuerttemberg', country: 'Germany', lat: 48.9337, lon: 8.9713, year: 1733, occupation: 'Weaver' },
+			{ name: 'Lander', city1: 'Wiebelskirchen', state: 'Saarland', country: 'Germany', lat: 49.3614, lon: 7.1837, year: 1834, occupation: 'Farming' },
+			{ name: 'Schnabel', city1: 'Winterbach', state: 'Baden-Wuerttemberg', country: 'Germany', lat: 48.8104, lon: 9.2936, year: 1904, occupation: 'Toolmaker' }
+		];
 
         // Loop through the cities array and add markers to the map
         cities.forEach(function(city) {
-            var marker = L.marker([city.lat, city.lon]).addTo(map);
+            // Set default marker color to green- Other Years
+            var markerColor = 'green';
+
+            // Check the year and change marker color accordingly- if change these change below too!!
+            if (city.year >= 1600 && city.year <= 1799) {
+                markerColor = 'red';
+            } else if (city.year >= 1800 && city.year <= 1899) {
+                markerColor = 'blue';
+			} else if (city.year >= 1900 && city.year <= 1999) {
+                markerColor = 'yellow';           
+			}
+
+            // Create a marker with custom icon
+            var marker = L.marker([city.lat, city.lon], {
+                icon: L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div style="background-color:${markerColor}; width: 20px; height: 20px; border-radius: 50%;"></div>`,
+                    /* iconSize: [20,20], iconAnchor: [10,10] */
+					iconSize: [10, 10], /* MGS- adjust these values to change pin diameter */
+                    iconAnchor: [5, 5]  /* MGS- and adjust these to center the pin on the marker */
+                })
+            }).addTo(map);
 
             // Create a popup with city information
             var popupContent = `
                 <b>${city.name}</b><br>
+                <b>City:</b> ${city.city1}<br>
 				<b>State:</b> ${city.state}<br>
                 <b>Country:</b> ${city.country}<br>
                 <b>Year:</b> ${city.year}<br>
@@ -51,6 +166,20 @@
             `;
             marker.bindPopup(popupContent);
         });
+
+		// Add legend control
+        var legend = L.control({position: 'bottomleft'});
+        legend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'legend');
+            div.innerHTML += '<div class="legend-title">Year:</div>'; /* MGS- change the legend title here */
+			div.innerHTML += '<div class="legend-item"><span style="background-color: red;"></span>1700-99</div>';
+            div.innerHTML += '<div class="legend-item"><span style="background-color: blue;"></span>1800-99</div>';
+            div.innerHTML += '<div class="legend-item"><span style="background-color: yellow;"></span>1900-99</div>';
+            div.innerHTML += '<div class="legend-item"><span style="background-color: green;"></span>Other Years</div>';
+            return div;
+        };
+        legend.addTo(map);
+
     </script>
 </body>
 </html>
